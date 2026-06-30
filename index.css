@@ -5,18 +5,18 @@
 
 :root {
   /* Dark Theme Colors (Default) */
-  --bg-primary: #0a0b10;
-  --bg-secondary: rgba(20, 22, 34, 0.7);
-  --bg-tertiary: rgba(30, 32, 50, 0.5);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --bg-primary: #0f0e0a;
+  --bg-secondary: rgba(22, 20, 16, 0.75);
+  --bg-tertiary: rgba(35, 32, 25, 0.5);
+  --border-color: rgba(212, 175, 55, 0.12);
+  --text-primary: #faf8f5;
+  --text-secondary: #d4cdc3;
+  --text-muted: #8c857b;
   
-  --primary: #6366f1; /* Indigo */
-  --primary-hover: #4f46e5;
-  --accent-teal: #14b8a6; /* Teal */
-  --accent-teal-hover: #0d9488;
+  --primary: #d4af37; /* Rich Gold */
+  --primary-hover: #b59422;
+  --accent-teal: #f3c63f; /* Lighter Amber Gold */
+  --accent-teal-hover: #d0a424;
   
   --inflow-color: #10b981; /* Green */
   --outflow-color: #ef4444; /* Red */
@@ -33,20 +33,20 @@
 
 /* Light Theme Variables */
 :root.light-theme {
-  --bg-primary: #f8fafc;
-  --bg-secondary: rgba(255, 255, 255, 0.8);
-  --bg-tertiary: rgba(241, 245, 249, 0.9);
-  --border-color: rgba(0, 0, 0, 0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --bg-primary: #fdfcf9;
+  --bg-secondary: rgba(255, 254, 250, 0.85);
+  --bg-tertiary: rgba(245, 241, 230, 0.95);
+  --border-color: rgba(212, 175, 55, 0.22);
+  --text-primary: #2d2613;
+  --text-secondary: #6e5e3b;
+  --text-muted: #9c8e70;
   
-  --primary: #4f46e5;
-  --primary-hover: #3730a3;
-  --accent-teal: #0d9488;
-  --accent-teal-hover: #115e59;
+  --primary: #b59422;
+  --primary-hover: #917416;
+  --accent-teal: #d4af37;
+  --accent-teal-hover: #b59422;
   
-  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-glass: 0 8px 32px 0 rgba(181, 148, 34, 0.08);
 }
 
 * {
@@ -84,6 +84,14 @@ header {
   gap: 0.75rem;
 }
 
+.logo-container img {
+  height: 2.5rem;
+  width: auto;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
+  object-fit: contain;
+}
+
 .logo-icon {
   width: 2.5rem;
   height: 2.5rem;
@@ -95,7 +103,7 @@ header {
   color: white;
   font-weight: bold;
   font-size: 1.25rem;
-  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.25);
 }
 
 .logo-text h1 {
