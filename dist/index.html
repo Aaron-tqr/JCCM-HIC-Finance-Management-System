@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HIC Finance Management System</title>
+  <script type="module" crossorigin src="/assets/index-t_Ujgvox.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DC6w7-Kt.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">HIC</div>
+      <div class="logo-text">
+        <h1>Hope in Christ</h1>
+        <span>Finance Management System</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
+        <!-- Sun/Moon SVG Toggle will be managed by JS -->
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+    
+    <!-- Summary Section -->
+    <section class="summary-grid">
+      <!-- Balance Card -->
+      <div class="card balance-card">
+        <div class="card-title">Total Balance</div>
+        <div id="totalBalanceVal" class="card-value">₱0.00</div>
+        <div class="card-subtext">Cumulative Inflow minus Outflow</div>
+      </div>
+      <!-- Inflow Card -->
+      <div class="card inflow-card">
+        <div class="card-title">Total Inflows</div>
+        <div id="totalInflowsVal" class="card-value inflow">₱0.00</div>
+        <div class="card-subtext">Total Sunday Tithes & Offerings</div>
+      </div>
+      <!-- Outflow Card -->
+      <div class="card outflow-card">
+        <div class="card-title">Total Outflows</div>
+        <div id="totalOutflowsVal" class="card-value outflow">₱0.00</div>
+        <div class="card-subtext">Total Cash Vouchers Disbursed</div>
+      </div>
+    </section>
+
+    <!-- Actions Row -->
+    <div class="actions-row">
+      <div class="quick-actions">
+        <button id="newInflowBtn" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+          Add Sunday Inflow (Receipt)
+        </button>
+        <button id="newOutflowBtn" class="btn btn-teal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+          Add Sunday Outflow (Voucher)
+        </button>
+      </div>
+      <div class="quick-actions">
+        <button id="settingsBtn" class="btn btn-secondary" title="Default Rates Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          Settings
+        </button>
+        <button id="exportBtn" class="btn btn-secondary" title="Export Ledger to JSON">
+          Export Data
+        </button>
+        <button id="importBtn" class="btn btn-secondary" title="Import Ledger from JSON">
+          Import Data
+        </button>
+        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="workspace-grid">
+      
+      <!-- Transaction History Section -->
+      <section class="card">
+        <div class="panel-header">
+          <h2 class="panel-title">Transaction Ledger</h2>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <select id="filterType" style="width: auto; padding: 0.4rem 0.8rem;">
+              <option value="all">All Transactions</option>
+              <option value="inflow">Inflows Only</option>
+              <option value="outflow">Outflows Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="transactionsTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsList">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+          <div id="emptyState" class="empty-state">
+            <div class="empty-state-icon">💸</div>
+            <p>No transaction history found. Get started by entering Sunday flows!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar / Guide & Statistics -->
+      <aside style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- Category Breakdown Card -->
+        <div class="card">
+          <div class="panel-header" style="margin-bottom: 1rem;">
+            <h3 class="panel-title" style="font-size: 1.1rem;">Summary breakdown</h3>
+          </div>
+          <div id="breakdownContainer" style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
+            <!-- Dynamically populated stats -->
+          </div>
+        </div>
+
+        <!-- Portfolio Portfolio Note -->
+        <div class="card" style="border-color: rgba(99, 102, 241, 0.2); background: linear-gradient(180deg, var(--bg-secondary), rgba(99, 102, 241, 0.05));">
+          <h3 class="panel-title" style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Portfolio Highlights</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1rem;">
+            This system was engineered with focus on modern UI aesthetics, local storage cache capabilities, standard print media stylesheets, and direct CSV/JSON serialization.
+          </p>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">
+            🛠️ Vanilla HTML5 / CSS3 / ES6<br>
+            📄 Zero third-party dependencies<br>
+            ⚡ Powered by Vite + Vercel deployment
+          </div>
+        </div>
+
+      </aside>
+
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- 1. Sunday Inflow Modal (Receipt) -->
+  <div id="inflowModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="panel-title">Add Sunday Inflow (Receipt)</h2>
+        <button class="close-btn" onclick="closeModal('inflowModal')">&times;</button>
+      </div>
+      <form id="inflowForm" class="modal-body">
+        <div class="form-group">
+          <label for="inflowDate">Sunday Date</label>
+          <input type="date" id="inflowDate" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="titheAmt">Tithes</label>
+          <div class="input-with-symbol">
+            <span class="input-symbol">₱</span>
+            <input type="number" id="titheAmt" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="offeringAmt">General Offering</label>
+          <div class="input-with-symbol">
+            <span class="input-symbol">₱</span>
+            <input type="number" id="offeringAmt" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="specialOfferingAmt">Special Offering</label>
+          <div class="input-with-symbol">
+            <span class="input-symbol">₱</span>
+            <input type="number" id="specialOfferingAmt" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inflowRemarks">Remarks / Details</label>
+          <textarea id="inflowRemarks" rows="2" placeholder="e.g. Sunday Morning Service, Special thanksgiving offering..."></textarea>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('inflowModal')">Cancel</button>
+        <button type="submit" form="inflowForm" class="btn btn-primary">Save & Generate Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Sunday Outflow Modal (Voucher) -->
+  <div id="outflowModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 700px;">
+      <div class="modal-header">
+        <h2 class="panel-title">Add Sunday Outflow (Cash Voucher)</h2>
+        <button class="close-btn" onclick="closeModal('outflowModal')">&times;</button>
+      </div>
+      <form id="outflowForm" class="modal-body">
+        <div class="form-group">
+          <label for="outflowDate">Voucher Date</label>
+          <input type="date" id="outflowDate" required>
+        </div>
+
+        <!-- Musicians Section -->
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">
+            Love Gifts for Worship Team
+          </h4>
+          <div class="musician-list-grid">
+            <div class="musician-item">
+              <input type="checkbox" id="lgWorshipLeader" checked>
+              <label for="lgWorshipLeader" style="margin-bottom: 0; cursor: pointer;">Worship Leader</label>
+            </div>
+            <div class="musician-item">
+              <input type="checkbox" id="lgDrummer" checked>
+              <label for="lgDrummer" style="margin-bottom: 0; cursor: pointer;">Drummer</label>
+            </div>
+            <div class="musician-item">
+              <input type="checkbox" id="lgKeyboardist" checked>
+              <label for="lgKeyboardist" style="margin-bottom: 0; cursor: pointer;">Keyboardist</label>
+            </div>
+            <div class="musician-item">
+              <input type="checkbox" id="lgBassist" checked>
+              <label for="lgBassist" style="margin-bottom: 0; cursor: pointer;">Bassist</label>
+            </div>
+            <div class="musician-item">
+              <input type="checkbox" id="lgGuitarist1" checked>
+              <label for="lgGuitarist1" style="margin-bottom: 0; cursor: pointer;">Lead Guitarist</label>
+            </div>
+            <div class="musician-item">
+              <input type="checkbox" id="lgGuitarist2" checked>
+              <label for="lgGuitarist2" style="margin-bottom: 0; cursor: pointer;">Rhythm Guitarist</label>
+            </div>
+          </div>
+
+          <!-- Backup Singers -->
+          <div class="backup-singers-header">
+            <label style="margin-bottom: 0;">Backup Singers</label>
+            <button type="button" id="addBackupSingerBtn" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">
+              + Add Backup Singer
+            </button>
+          </div>
+          <div id="backupSingersList" class="backup-singers-container">
+            <!-- Dynamic backup singer name rows will be added here -->
+          </div>
+        </div>
+
+        <!-- Food and Pastor -->
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">
+            Team & Ministry Expenses
+          </h4>
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="saturdaySnacks">Saturday Practice Snacks</label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">₱</span>
+                <input type="number" id="saturdaySnacks" min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="pastorGift">Pastor's Love Gift</label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">₱</span>
+                <input type="number" id="pastorGift" min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Expenses -->
+        <div>
+          <h4 style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.25rem;">
+            Church Renovation & Other Incurred
+          </h4>
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="renovationEquipment">Equipment / Renovation</label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">₱</span>
+                <input type="number" id="renovationEquipment" min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="laborCost">Labor (Cleaning/Renov.)</label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">₱</span>
+                <input type="number" id="laborCost" min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="musicFellowship">Music Fellowship (Monthly)</label>
+              <div class="input-with-symbol">
+                <span class="input-symbol">₱</span>
+                <input type="number" id="musicFellowship" min="0" step="0.01" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="outflowRemarks">Remarks / Voucher Memo</label>
+            <textarea id="outflowRemarks" rows="2" placeholder="e.g. Love gifts for Sunday Worship Service, Sanctuary fan repair..."></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('outflowModal')">Cancel</button>
+        <button type="submit" form="outflowForm" class="btn btn-teal">Save & Generate Voucher</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Settings Modal (Rates setup) -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="panel-title">Default Allocation Rates</h2>
+        <button class="close-btn" onclick="closeModal('settingsModal')">&times;</button>
+      </div>
+      <form id="settingsForm" class="modal-body settings-section">
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+          Define default rates to auto-calculate Love Gifts and Snacks when generating Sunday cash vouchers.
+        </p>
+        
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="rateWorshipLeader">Worship Leader</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol">₱</span>
+              <input type="number" id="rateWorshipLeader" min="0" step="0.01" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rateMusician">Musicians (WL, Dr, Key, Bass, Gt)</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol">₱</span>
+              <input type="number" id="rateMusician" min="0" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="rateBackupSinger">Backup Singer (per head)</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol">₱</span>
+              <input type="number" id="rateBackupSinger" min="0" step="0.01" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ratePastor">Pastor Love Gift</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol">₱</span>
+              <input type="number" id="ratePastor" min="0" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rateSnacks">Saturday Snacks Budget</label>
+          <div class="input-with-symbol">
+            <span class="input-symbol">₱</span>
+            <input type="number" id="rateSnacks" min="0" step="0.01" required>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('settingsModal')">Close</button>
+        <button type="submit" form="settingsForm" class="btn btn-primary">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Printable Virtual Receipt / Voucher Modal -->
+  <div id="printModalOverlay" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 class="panel-title" id="printModalTitle">Print Document</h2>
+        <button class="close-btn" onclick="closeModal('printModalOverlay')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="printableDocumentArea" class="printable-document">
+          <!-- Populated dynamically with Courier receipt layout -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('printModalOverlay')">Close</button>
+        <button id="triggerPrintBtn" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vite App module entry point -->
+</body>
+</html>
